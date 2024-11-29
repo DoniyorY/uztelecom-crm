@@ -38,6 +38,8 @@ class Workers extends \yii\db\ActiveRecord
         return 'workers';
     }
 
+    public $imageFile;
+
     /**
      * {@inheritdoc}
      */
@@ -48,6 +50,7 @@ class Workers extends \yii\db\ActiveRecord
             [['department_id', 'company_id', 'created', 'updated', 'status', 'worker_status_id', 'stavka_id', 'position_id'], 'integer'],
             [['birthday', 'passport_end_date'], 'safe'],
             [['fullname_ru', 'fullname_uz', 'phone', 'passport_series', 'passport_pinfl', 'passport_address', 'address_ru', 'address_uz', 'image'], 'string', 'max' => 255],
+            [['imageFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, pdf'],
         ];
     }
 
@@ -58,25 +61,46 @@ class Workers extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'department_id' => 'Department ID',
-            'company_id' => 'Company ID',
-            'fullname_ru' => 'Fullname Ru',
-            'fullname_uz' => 'Fullname Uz',
-            'phone' => 'Phone',
-            'birthday' => 'Birthday',
-            'passport_series' => 'Passport Series',
-            'passport_pinfl' => 'Passport Pinfl',
-            'passport_address' => 'Passport Address',
-            'passport_end_date' => 'Passport End Date',
-            'address_ru' => 'Address Ru',
-            'address_uz' => 'Address Uz',
-            'image' => 'Image',
-            'created' => 'Created',
-            'updated' => 'Updated',
-            'status' => 'Status',
-            'worker_status_id' => 'Worker Status ID',
-            'stavka_id' => 'Stavka ID',
-            'position_id' => 'Position ID',
+            'department_id' => 'Отдел',
+            'company_id' => 'Филиал',
+            'fullname_ru' => 'Ф.И.О на русском',
+            'fullname_uz' => 'Ф.И.О',
+            'phone' => 'Номер телефона',
+            'birthday' => 'Дата рождения',
+            'passport_series' => 'Серия паспорта',
+            'passport_pinfl' => 'ПИНФЛ',
+            'passport_address' => 'Кем выдан',
+            'passport_end_date' => 'Дата окончания паспорта',
+            'address_ru' => 'Адрес на русском',
+            'address_uz' => 'Адрес на узбекском',
+            'image' => 'Фотография',
+            'imageFile' => 'Фотография',
+            'created' => 'Дата создания',
+            'updated' => 'Дата обновления',
+            'status' => 'Статус',
+            'worker_status_id' => 'Статус Сотрудника',
+            'stavka_id' => 'Ставка',
+            'position_id' => 'Должность',
         ];
+    }
+
+    public function getDepartment()
+    {
+        return $this->hasOne(Departments::className(), ['id' => 'department_id']);
+    }
+
+    public function getCompany()
+    {
+        return $this->hasOne(Company::className(), ['id' => 'company_id']);
+    }
+
+    public function getWorkerStatus()
+    {
+        return $this->hasOne(WorkerStatus::className(), ['id' => 'worker_status_id']);
+    }
+
+    public function getPosition()
+    {
+        return $this->hasOne(Positions::className(), ['id' => 'position_id']);
     }
 }

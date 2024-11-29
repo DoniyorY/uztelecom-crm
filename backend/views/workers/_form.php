@@ -68,7 +68,7 @@ use yii\widgets\ActiveForm;
             <?= $form->field($model, 'birthday')->textInput(['type' => 'date']) ?>
         </div>
         <div class="col-md-4 mt-4">
-            <?= $form->field($model, 'image')->fileInput(['maxlength' => true]) ?>
+            <?= $form->field($model, 'imageFile')->fileInput(['maxlength' => true]) ?>
         </div>
         <div class="col-md-12 mt-3">
             <div class="form-group">
