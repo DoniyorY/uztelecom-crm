@@ -53,16 +53,22 @@ use yii\widgets\ActiveForm;
             <?= $form->field($model, 'address_uz')->textInput(['maxlength' => true]) ?>
         </div>
         <div class="col-md-6">
-            <?= $form->field($model, 'passport_series')->textInput(['maxlength' => true]) ?>
+            <?= $form->field($model, 'passport_series')->widget(\yii\widgets\MaskedInput::class, [
+                'mask' => 'AA9999999'
+            ]) ?>
 
-            <?= $form->field($model, 'passport_pinfl')->textInput(['maxlength' => true]) ?>
+            <?= $form->field($model, 'passport_pinfl')->widget(\yii\widgets\MaskedInput::class, [
+                'mask' => '99999999999999'
+            ]) ?>
 
             <?= $form->field($model, 'passport_address')->textInput(['maxlength' => true]) ?>
 
             <?= $form->field($model, 'passport_end_date')->textInput() ?>
         </div>
         <div class="col-md-4">
-            <?= $form->field($model, 'phone')->textInput(['maxlength' => true]) ?>
+            <?= $form->field($model, 'phone')->widget(\yii\widgets\MaskedInput::class, [
+                'mask' => '+999 99 999 99 99'
+            ]) ?>
         </div>
         <div class="col-md-4">
             <?= $form->field($model, 'birthday')->textInput(['type' => 'date']) ?>
@@ -76,8 +82,6 @@ use yii\widgets\ActiveForm;
             </div>
         </div>
     </div>
-
-
 
 
     <?php ActiveForm::end(); ?>
