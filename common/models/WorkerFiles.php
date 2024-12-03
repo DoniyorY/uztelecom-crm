@@ -25,6 +25,8 @@ class WorkerFiles extends \yii\db\ActiveRecord
         return 'worker_files';
     }
 
+    public $imageFile;
+
     /**
      * {@inheritdoc}
      */
@@ -34,6 +36,7 @@ class WorkerFiles extends \yii\db\ActiveRecord
             [['worker_id', 'name_uz', 'image', 'created', 'status'], 'required'],
             [['worker_id', 'created', 'status'], 'integer'],
             [['name_ru', 'name_uz', 'image'], 'string', 'max' => 255],
+            [['imageFile'], 'file', 'extensions' => 'jpg, pdf, png', 'skipOnEmpty' => true],
         ];
     }
 
@@ -45,11 +48,11 @@ class WorkerFiles extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'worker_id' => 'Worker ID',
-            'name_ru' => 'Name Ru',
-            'name_uz' => 'Name Uz',
-            'image' => 'Image',
-            'created' => 'Created',
-            'status' => 'Status',
+            'name_ru' => 'Название на русском',
+            'name_uz' => 'Название на узбекском',
+            'image' => 'Документ',
+            'created' => 'Дата создания',
+            'status' => 'Статус',
         ];
     }
 }

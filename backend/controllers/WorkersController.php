@@ -3,6 +3,9 @@
 namespace backend\controllers;
 
 use common\models\UploadsImage;
+use common\models\WorkerChildren;
+use common\models\WorkerFiles;
+use common\models\WorkerPhones;
 use common\models\Workers;
 use common\models\search\WorkersSearch;
 use yii\web\Controller;
@@ -27,6 +30,7 @@ class WorkersController extends Controller
                     'class' => VerbFilter::className(),
                     'actions' => [
                         'delete' => ['POST'],
+                        'delete-phone' => ['POST'],
                     ],
                 ],
             ]
@@ -59,6 +63,9 @@ class WorkersController extends Controller
     {
         return $this->render('view', [
             'model' => $this->findModel($id),
+            'worker_phones' => WorkerPhones::findAll(['worker_id' => $id]),
+            'worker_files' => WorkerFiles::findAll(['worker_id' => $id]),
+            'worker_children' => WorkerChildren::findAll(['worker_id' => $id]),
         ]);
     }
 
@@ -77,11 +84,11 @@ class WorkersController extends Controller
                 $model->updated = time();
                 $model->status = 0;
                 $model->worker_status_id = 1;
-                $files = UploadedFile::getInstances($model, 'imageFile');
+                $files = UploadedFile::getInstance($model, 'imageFile');
                 $uploads = UploadsImage::uploadImage($model, $files, 'workers');
                 if ($uploads) {
                     $model->image = $uploads;
-                    $model->save();
+                    $model->save(false);
                 }
                 return $this->redirect(['view', 'id' => $model->id]);
             }
@@ -114,6 +121,42 @@ class WorkersController extends Controller
         ]);
     }
 
+    public function actionAddPhone()
+    {
+        $model = new WorkerPhones();
+        if ($this->request->isPost && $model->load($this->request->post())) {
+            $model->created = time();
+            $model->status = 0;
+            $model->save();
+            return $this->redirect($this->rer());
+        }
+    }
+
+    public function actionAddFile()
+    {
+        $model = new WorkerFiles();
+        if ($this->request->isPost && $model->load($this->request->post())) {
+            $model->created = time();
+            $model->status = 0;
+            $files = UploadedFile::getInstance($model, 'imageFile');
+            $uploads = UploadsImage::uploadImage($model, $files, "worker_files");
+            if ($uploads) {
+                $model->image = $uploads;
+                $model->save(false);
+                \Yii::$app->session->setFlash('success', 'Документ успешно сохранен');
+                return $this->redirect($this->rer());
+            }
+        }
+    }
+
+    public function actionPhoneStatus($id, $status)
+    {
+        $model = WorkerPhones::findOne($id);
+        $model->status = $status;
+        $model->update();
+        return $this->redirect($this->rer());
+    }
+
     /**
      * Deletes an existing Workers model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
@@ -126,6 +169,14 @@ class WorkersController extends Controller
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
+    }
+
+    public function actionDeletePhone($id)
+    {
+        $model = WorkerPhones::findOne($id);
+        $model->delete();
+        \Yii::$app->session->setFlash('success', 'Номер телефона успешно удалён');
+        return $this->redirect($this->rer());
     }
 
     /**
@@ -142,5 +193,10 @@ class WorkersController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    protected function rer()
+    {
+        return \Yii::$app->request->referrer;
     }
 }
