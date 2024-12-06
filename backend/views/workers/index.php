@@ -1,6 +1,10 @@
 <?php
 
+use common\models\Company;
+use common\models\Departments;
 use common\models\Workers;
+use common\models\WorkerStatus;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\grid\ActionColumn;
@@ -38,17 +42,24 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'department_id',
                 'value' => function ($data) {
                     return $data->department->name_ru;
-                }
+                },
+                'filter' => ArrayHelper::map(Departments::find()->all(), 'id', 'name_ru'),
             ],
             [
                 'attribute' => 'company_id',
                 'value' => function ($data) {
                     return $data->company->name_ru;
-                }
+                },
+                'filter' => ArrayHelper::map(Company::find()->all(), 'id', 'name_ru'),
             ],
             //'fullname_uz',
             'phone',
-            'birthday',
+            [
+                'attribute' => 'birthday',
+                'value' => function ($data) {
+                    return date('d.m.Y', strtotime($data->birthday));
+                }
+            ],
             //'passport_series',
             //'passport_pinfl',
             //'passport_address',
@@ -63,20 +74,33 @@ $this->params['breadcrumbs'][] = $this->title;
                 }
             ],
             //'updated',
-            [
+            /*[
                 'attribute' => 'status',
                 'value' => function ($data) {
                     return $data->status;
                 }
+            ],*/
+            [
+                'attribute' => 'worker_status_id',
+                'value' => function ($data) {
+                    return $data->workerStatus->name_ru;
+                },
+                'filter' => ArrayHelper::map(WorkerStatus::find()->all(), 'id', 'name_ru'),
             ],
-            //'worker_status_id',
             //'stavka_id',
-            'position_id',
+            [
+                'attribute' => 'position_id',
+                'value' => function ($data) {
+                    return $data->position->name_ru;
+                },
+                'filter' => ArrayHelper::map(\common\models\Positions::find()->all(), 'id', 'name_ru'),
+            ],
             [
                 'class' => ActionColumn::className(),
                 'urlCreator' => function ($action, Workers $model, $key, $index, $column) {
                     return Url::toRoute([$action, 'id' => $model->id]);
-                }
+                },
+                'template' => '{view}',
             ],
         ],
     ]); ?>

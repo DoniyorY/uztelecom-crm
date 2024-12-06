@@ -267,7 +267,57 @@ $this->params['breadcrumbs'][] = $this->title;
                     </div>
                 </div>
                 <div class="tab-pane fade" id="contact-tab-pane" role="tabpanel" aria-labelledby="contact-tab"
-                     tabindex="0">...
+                     tabindex="0">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <h3>Дети сотрудников</h3>
+                        </div>
+                        <div class="col-md-4">
+                            <button class="btn btn-success w-100" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#addChild" aria-expanded="false"
+                                    aria-controls="addChild">
+                                Добавить <i class="bi bi-plus-square"></i>
+                            </button>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="collapse" id="addChild">
+                                <div class="card card-body">
+                                    <?= $this->render('_form_children', [
+                                        'model' => new \common\models\WorkerChildren(),
+                                        'worker_id' => $model->id,
+                                    ]) ?>
+                                </div>
+                            </div>
+                        </div>
+                        <hr class="mt-4">
+                        <div class="col-md-12">
+                            <table class="table-sm table table-bordered table-striped text-center">
+                                <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Ф.И.О</th>
+                                    <th>Дата рождения</th>
+                                    <th>Дата создания</th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <?php $i = 1;
+                                foreach ($worker_children as $item): ?>
+                                    <tr>
+                                        <td><?= $i++ ?></td>
+                                        <td><?= $item->fullname ?></td>
+                                        <td><?= date('d.m.Y', $item->birthday) ?></td>
+                                        <td><?= date('d.m.Y / H:i', $item->created) ?></td>
+                                        <td>
+                                            <?= Html::a('Удалить <i class="bi bi-trash"></i>', ['delete-child', 'id' => $item->id], ['class' => 'btn btn-danger btn-sm', 'data-confirm' => 'Подтвердите действие!!!', 'data-method' => 'post']) ?>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

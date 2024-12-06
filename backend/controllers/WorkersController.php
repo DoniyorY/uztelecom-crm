@@ -149,6 +149,19 @@ class WorkersController extends Controller
         }
     }
 
+    public function actionAddChild()
+    {
+        $model = new WorkerChildren();
+        if ($this->request->isPost && $model->load($this->request->post())) {
+            $model->created = time();
+            $model->status = 0;
+            $model->birthday = strtotime($model->birthday);
+            $model->save();
+            \Yii::$app->session->setFlash('success', 'Успешно добавлено!!!');
+            return $this->redirect($this->rer());
+        }
+    }
+
     public function actionPhoneStatus($id, $status)
     {
         $model = WorkerPhones::findOne($id);
@@ -177,6 +190,14 @@ class WorkersController extends Controller
         $model->delete();
         \Yii::$app->session->setFlash('success', 'Номер телефона успешно удалён');
         return $this->redirect($this->rer());
+    }
+
+    public function actionDeleteChild($id)
+    {
+        $model = WorkerChildren::findOne($id);
+        $model->delete();
+        \Yii::$app->session->setFlash('success', 'Успешно удалено');
+        return $this->redirect(['index']);
     }
 
     /**

@@ -31,7 +31,7 @@ class WorkerChildren extends \yii\db\ActiveRecord
     {
         return [
             [['worker_id', 'fullname', 'birthday', 'created', 'status'], 'required'],
-            [['worker_id', 'birthday', 'created', 'status'], 'integer'],
+            [['worker_id', 'created', 'status'], 'integer'],
             [['fullname'], 'string', 'max' => 255],
         ];
     }
